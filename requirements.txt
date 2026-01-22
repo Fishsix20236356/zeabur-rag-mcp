@@ -11,3 +11,4 @@ langchain-openai     # 用于调用 DeepSeek/OpenAI 接口
 langchain-chroma     # 用于向量检索
 chromadb             # 向量数据库核心
 pydantic>=2.0.0      # 基础数据验证
+langchain-text-splitters
