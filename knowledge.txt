@@ -1,0 +1,500 @@
+https://qcn350xgd3aa.feishu.cn/wiki/KA8WwB1T0iTTA8kpkI1cjaFZnwc
+知识图谱自动化抽取工具
+kg-gen：
+优点：
+基于大语言言模型和DSPy框架的工具，支持自定义实体类型与关系类型定义，适应不同业务需求。通过迭代式LM聚类算法对相似实体和关系进行语义合并，减少图谱冗余。还支持长文本分块、对话消息处理，并能提取对话角色间的关系，适合对话场景的语义理解。
+缺点：
+聚类结果高度依赖大语言模型的语义表示能力，在垂直领域语义偏差可能影响聚合准确性，且当缺乏结构化数据监督时，容易存在实体边界不清、角色识别模糊等问题。
+适用领域：
+对话场景下的知识图谱构建、用户画像生成、智能客服对话理解、社交网络语义建图等。
+
+
+DeepKE
+基于PyTorch框架，支持全监督、低资源少样本、长文本及多模态场景，通过BERT变体结合CRF层完成实体识别，再通过关系分类模型提取三元组。采用模块化设计，支持命名实体识别、关系抽取、属性抽取等多任务。
+
+优点：
+能够同时支持实体识别、关系抽取、属性抽取。并且在少样本情况下仍能有效工作，适合垂直领域的长文档处理。
+缺点：
+依赖PyTorch和预训练模型，需要GPU加速，所以对计算资源要求较高。从零训练开销大，且在领域迁移时需要重新适配。
+适用领域：
+医学、法律、金融等少样本高价值专业领域文档的实体和关系抽取任务。
+
+
+SpaCy
+通用NLP库，提供分词、实体识别、依存分析等功能，依赖规则和统计模型。
+优点：
+处理速度快，内置的语言预训练模型多，支持复杂的语义分析
+缺点：
+中文模型的准确率和功能完善度低于英文模型，SpaCy 未内置关系抽取模型，需依赖规则或外部模型扩展功能，预训练模型主要基于通用文本，在专业领域需额外微调或训练
+适用领域：
+通用英文信息抽取任务、轻量级NLP处理流程、基于规则和依存语法的关系抽取。
+
+
+OpenNRE
+清华大学开源框架，支持句子级和远程监督关系抽取，核心模型为分段卷积和注意力机制，通过掩码机制处理实体位置分段池化
+
+优点：
+可利用外部知识库自动生成训练数据，降低人工标注依赖，模块化设计，支持多种关系分类模型，且集成了BERT等预训练模型
+缺点：
+需预先定义关系类型，仅支持已知实体关系分类，不适用于端到端抽取
+适用领域：
+关系抽取任务评估、科研验证、垂类领域构建半监督关系抽取系统。
+
+
+
+Scikit-LLM
+优点：
+直接利用LLM抽取知识，无需训练数据。
+缺点：
+需要调用OpenAI，难以定制抽取规则，对于复杂抽取场景可控性较差。
+
+AutoKG
+自动构建知识图谱增强LLM，通过图拉普拉斯学习评估关键词关系权重，结合向量相似度与图搜索策略。
+优点：
+基于LangChain和LLM的三元组自动生成工具，支持链式调用（文本分块→实体识别→关系抽取）使用方便。
+缺点：
+依赖OpenAI API，可替换为本地LLM但效果下降
+适用领域：
+文档信息抽取、企业文档知识图谱构建、基于LLM的知识管理系统。
+
+
+PromptKG
+基于提示学习的知识图谱表示框架，集成生成式与判别式模型，通过预训练语言模型生成结构化知识
+优点：
+利用大语言模型的自然语言理解能力通过Prompt 编写策略，直接输出结构化三元组。适合零样本、低资源场景下的结构化抽取。
+缺点：
+大模型响应易受到提示词微小变化影响，稳定性不足，且中文多模态支持较弱
+适用领域：
+科研探索、行业垂直小样本抽取、跨语言知识图谱构建（如中英双语）
+
+Haystack
+优点：
+具有完整的大模型应用框架，支持 RAG、多模态问答、生成式信息抽取等能力。且支持构建自定义的Pipeline，可以嵌入大模型生成三元组组件。
+缺点：
+不提供三元组生成模块，需要用户基于 Prompt 构建自定义节点
+
+
+OneKE
+由蚂蚁集团与浙江大学联合开发，基于大模型的中英文双语知识抽取框架，支持Schema驱动的信息抽取。通过预训练模型泛化多领域任务，结合图结构增强知识关联
+优点:
+支持命名实体识别、关系抽取、事件抽取等多种信息抽取任务, 且提供多种抽取方法，可根据具体任务需求选择最合适的方式
+缺点：
+系统的抽取效果在很大程度上依赖于预先定义的schema，可能对灵活性有所限制。
+
+Chat2Graph
+一种将聊天对话自动转化为结构化知识图谱的技术。
+优点：
+针对对话内容的实体识别、角色建模和关系抽取，适配聊天上下文，可结合上下文语义演化动态生成知识图谱，适合对话场景的长期记忆构建。
+缺点：
+对语境不明确或跳跃性的对话处理效果有限。
+适用领域：
+对话式AI助手、客服系统、社交聊天场景下的用户意图建图和关系分析。
+
+怎么在没有人工标注的情况下做高质量的抽取：
+1. 直接利用大语言模型，通过设计合适的Prompt进行零样本或者少样本抽取，
+
+2. 远程监督，利用现有知识库自动对齐文本,将知识图谱中的三元组与文本匹配生成伪标签.但必须在知识库中存在相关的描述才可以，在垂直领域可能不太适用。
+
+3. 自训练，用预训练的模型先生成少量高置信度伪标签。在用伪标签训练模型，再用模型预测新数据，逐步扩展数据集。
+
+
+大模型如何进行三元组抽取：
+Prompt-based 抽取，适用于零样本或少样本情况
+少样本微调 + 指令式抽取，构造一批三元组抽取样本，让模型根据学会的文本结构生成规范三元组。
+基于结构化输出的方式，利用模型生成结构化JSON或XML格式的输出来抽取相应的3元组。
+
+ RAG 系统构建
+一、工作概述
+本项目是一个基于深度学习的文本嵌入和检索系统，主要用于实现高效的文本相似度搜索和检索增强生成（Retrieval-Augmented Generation，RAG）功能。系统使用先进的预训练语言模型来生成文本的向量表示，从而支持智能文本检索和匹配。特别适用于钢铁行业知识问答场景，能够从大量文档中快速检索相关内容并生成专业回答。
+二、系统架构（逻辑流程）
+|步骤|         操作                           工具/方法
+| 1 |        用户输入                          input()
+| 2 |       提取关键词                  OpenAI 接口 + 自定义提示词
+| 3 |      向量化关键词                       BERT 编码器
+| 4 |   Elasticsearch 向量检索            cosine similarity
+| 5 |     BM25 重排序                         rank_bm25
+| 6 |       构造 Prompt                   拼接 Top-10 文档
+| 7 |        生成回答                          Qwen3-32B
+三、核心模块说明
+技术栈
+1. 核心框架与库：
+  - Elasticsearch：向量存储与检索
+  - Transformers：预训练模型加载与推理
+  - PyTorch：深度学习计算框架
+  - Rank-BM25：文本重排序算法
+2. 模型选择：
+  - 嵌入模型：hfl/chinese-roberta-wwm-ext-large（1024维向量）
+  - 大语言模型：Qwen3-32B（通过API调用）
+  - 评价指标所需中文模型：bert-base-chinese
+3. 部署与扩展：
+  - 支持Docker容器化部署
+  - 水平扩展能力
+  - 健康检查与监控接口
+关键词提取（LLM）
+
+功能：
+使用大语言模型（LLM）提取用户问题中的技术关键词。
+输入：
+原始用户问题字符串。
+输出：
+JSON 格式的关键词列表（聚焦钢铁行业术语）。
+示例输出：
+["热轧裂纹形成机制", "钢中氮元素行为", "CAE模拟在轧制过程中的应用"]
+    prompt = f"""
+                角色名称：钢铁行业知识专家
+                角色描述：你是一个钢铁行业的专业知识专家，了解钢铁的生产流程，擅长提炼科研人员的问题背后的技术主题。
+                回答风格：我的回答具有技术性、详细、准确，并专注于问题的核心要点。
+                你的任务是帮助用户理解钢铁行业的各类问题，并对用户提问的核心主题进行识别和提取，便于后续知识检索与问答。
+                输出应聚焦于钢铁行业的核心术语，如工艺流程、设备名称、性能指标、材料种类、缺陷类型、实验方法、仿真手段、环境影响等。
+                优先提取具有研究价值和检索价值的词汇。
+                关键词应尽量为名词或名词短语。
+                若问题中包含多个主题，请分别列出.
+                只在用户的输入中提取，不要随意发散.
+                示例输入：
+                "连铸坯凝固过程中温度场分布对组织均匀性有何影响？"
+                输出：
+                ["连铸坯", "凝固过程", "温度场", "组织均匀性"]
+                用户输入：
+                "{query}"
+              """
+文本向量化（BERT）
+
+功能：
+将关键词进行平均池化向量化，得到固定维度的嵌入表示。
+tokenizer = AutoTokenizer.from_pretrained(EBD_MODEL_PATH)
+model = AutoModel.from_pretrained(EBD_MODEL_PATH)
+def mean_pooling(token_embeddings, attention_mask):
+    input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+    return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
+def encode(texts):
+    # 批量编码文本
+    encoded_input = tokenizer(texts, padding=True, truncation=True, return_tensors='pt')
+    with torch.no_grad():
+        model_output = model(**encoded_input)
+    token_embeddings = model_output.last_hidden_state
+    sentence_embeddings = mean_pooling(token_embeddings, encoded_input['attention_mask'])
+    # L2 归一化
+    sentence_embeddings = F.normalize(sentence_embeddings, p=2, dim=1)
+    return sentence_embeddings.numpy()
+技术细节：
+使用 mean_pooling 和 L2 归一化。
+支持批量编码。
+向量检索（Elasticsearch）
+
+功能：
+在 Elasticsearch 中基于余弦相似度检索最相关的 Top-K 文档（默认 Top-100）。
+def retrieve_from_es(query_emb, top_k):
+    query_vector = query_emb.tolist()
+    print("Query vector length:", len(query_vector))
+    response = es.search(
+        index=INDEX_NAME,
+        size=top_k,
+        query={
+            "script_score": {
+                "query": {"match_all": {}},
+                "script": {
+                    "source": "cosineSimilarity(params.query_vector, 'text_vector') + 1.0",
+                    "params": {"query_vector": query_vector}
+                }
+            }
+        }
+    )
+    # 返回结构化数据列表
+    results = []
+    for hit in response["hits"]["hits"]:
+        source = hit["_source"]
+        results.append({
+            "source": "vector_search",
+            "filename": source.get("filename", "unknown"),
+            "content": source.get("text", ""),
+            "score": hit["_score"]
+        })
+    return results
+BM25 重排序
+
+功能：
+使用 jieba 分词 + rank_bm25 对检索结果进行关键词匹配重排序。
+目标：
+提升短语级相关性排序效果，弥补向量检索的语义模糊问题。
+def rerank_by_bm25(query: str, docs: list, top_n):
+    # 只提取 content 字段用于 BM25 分词和评分
+    contents = [doc["content"] for doc in docs]
+    # 对语料进行分词
+    tokenized_corpus = [list(jieba.cut(content)) for content in contents]
+    # tokenized_corpus = [list(jieba.cut(doc)) for doc in docs]
+    bm25 = BM25Okapi(tokenized_corpus)
+    tokenized_query = list(jieba.cut(query))
+    scores = bm25.get_scores(tokenized_query)
+    ranked_docs = sorted(zip(docs, scores), key=lambda x: x[1], reverse=True)
+构建 Prompt（上下文拼接）
+
+功能：
+将 Top-10 结果拼接为上下文，构造给 LLM 的 Prompt。
+提示词模板包含：
+领域限定（钢铁冶金、材料性能等）
+回答风格要求（技术性、简洁、基于上下文）
+明确的格式要求
+大模型回答生成（LLM）
+
+功能：
+调用本地部署的 Qwen3-32B 模型生成最终回答。
+特点：
+仅依赖上下文内容作答
+不引入外部知识
+输出简洁、专业的技术语言
+四、关键技术点总结
+|   技术点                              描述
+| 多模态检索                   向量 + BM25 双重排序机制
+| 行业术语理解                 利用 LLM 提取专业关键词
+| 向量归一化               L2 Normalize 提高余弦相似度准确性
+| 上下文控制                  限制仅使用检索结果生成回答
+
+评价指标调研
+模型的评测方法，主要有3种，分别是：客观性评测、基于人的主观性评测、基于模型的评测。
+[图片]
+客观性评测
+文档摘要能力评估指标
+文档摘要能力评估指标是用来衡量自动摘要系统生成的摘要质量好坏的一系列标准或方法。这些指标通过对比自动生成的摘要与参考摘要，来评估其在内容准确性、完整性、语言流畅性等方面的表现。
+类型
+度量
+描述
+参考资料
+
+
+
+
+
+
+基于重叠的度量
+BLEU
+BLEU评分是一种基于精度的衡量标准，范围从0到1。值越接近1，预测越好。
+https://huggingface.co/spaces/evaluate-metric/bleu
+
+ROUGE
+ROUGE(Recall-Oriented Understudy for   Gisting Evaluation)是一套用于评估自然语言处理中自动摘要和机器翻译软件的度量标准和附带的软件包。
+https://huggingface.co/spaces/evaluate-metric/rouge
+
+ROUGE-N
+测量候选文本和参考文本之间的n-gram（n个单词的连续序列）的重叠。它根据n-gram重叠计算精度，召回率和F1分数。
+https://github.com/google-research/google-research/tree/master/rouge
+
+ROUGE-L
+测量候选文本和参考文本之间的最长公共子序列（LCS）。它根据LCS的长度计算精确率、召回率和F1分数。
+https://github.com/google-research/google-research/tree/master/rouge
+
+METEOR
+一种机器翻译评估的自动度量，其基于机器生成的翻译和人类生成的参考翻译之间的单字匹配的广义概念。
+https://huggingface.co/spaces/evaluate-metric/meteor
+
+基于语义相似性的度量
+
+BERTScore
+利用BERT中预先训练的上下文嵌入，并通过“余弦相似度”匹配候选句子和参考句子中的单词。
+https://huggingface.co/spaces/evaluate-metric/bertscore
+
+MoverScore
+基于上下文向量和距离的文本生成评估。
+https://paperswithcode.com/paper/moverscore-text-generation-evaluating-with
+
+
+擅长总结
+SUPERT
+无监督多文档摘要评估和生成。
+https://github.com/danieldeutsch/SUPERT
+
+  BLANCBlanc
+摘要质量的无引用度量，用于衡量在访问和不访问摘要的情况下屏蔽语言建模性能的差异。
+https://paperswithcode.com/method/blanc
+
+FactCC
+文摘文本摘要的事实一致性评价指标
+https://github.com/salesforce/factCC
+其他
+
+Perplexity
+
+在分析文本样本时，困惑度是语言模型预测准确性的统计指标。简而言之，它衡量了模型在遇到新数据时的“惊讶”程度。较低的困惑值表示模型对文本分析的预测准确度较高。
+https://huggingface.co/spaces/evaluate-metric/perplexity
+问答样本评估指标
+QA评估指标主要用于衡量基于LLM的应用系统在解决用户问答方面的有效性。
+度量
+描述
+参考资料
+
+QAEval
+QAEval 是一个用于评估问答系统的自动化评估方法，特别是在自然语言处理（NLP）领域中。它主要用于评估一个系统生成的答案的质量，通过比较系统的答案与人类提供的参考答案。QAEval 通过多种指标来评估答案的相关性和信息的完整性。
+https://github.com/danieldeutsch/sacrerouge/blob/master/doc/metrics/qaeval.md
+QAFactEval
+基于QA的事实一致性评价。
+https://github.com/salesforce/QAFactEval
+QuestEval
+一种NLG指标，用于评估两个不同的输入是否包含相同的信息。它可以处理多模式和多语言输入。
+https://github.com/ThomasScialom/QuestEval
+实体识别指标
+实体识别（NER）是对文本中特定实体进行识别和分类的一种任务。评估NER，对于确保信息的准确提取，其目标是从文本中识别出具有特定意义的实体，如人名、地名、组织机构名、时间、日期等。对需要精确实体识别的应用系统非常重要。
+度量
+描述
+参考资料
+分类度量指标
+实体级别或模型级别的分类指标（精度、召回率、准确性、F1分数等）。
+https://learn.microsoft.com/en-us/azure/ai-services/language-service/custom-named-entity-recognition/concepts/evaluation-metrics
+解释评估指标
+主要思想是根据实体长度、标签一致性、实体密度、文本的长度等属性将数据划分为实体的桶，然后在每个桶上分别评估模型。
+https://github.com/neulab/InterpretEval
+https://arxiv.org/pdf/2011.06854.pdf
+文本转SQL
+通过大模型实现文本转SQL，在一些对话式的数据分析、可视化、智能报表、智能仪表盘等场景中经常被用到，文本转SQL是否有效性取决于LLM能否熟练地概括各种自然语言问题，并灵活地构建新的SQL查询语句。想要确保系统不仅在熟悉的场景中表现良好，并且在面对不同的语言表达风格的输入、不熟悉的数据库结构和创新的查询格式时还依然表现出准确性。需要全面评估文本到SQL系统方面能否发挥作用。
+度量
+描述
+Exact-set-match accuracy (EM)
+EM根据其相应的基本事实SQL查询来评估预测中的每个子句。然而，一个限制是，存在许多不同的方式来表达SQL查询，以达到相同的目的。
+Execution Accuracy (EX)
+EX根据执行结果评估生成的答案的正确性。
+VES (Valid Efficiency Score)
+VES是一个用于测量效率以及所提供SQL查询的通常执行正确性的度量标准。
+RAG系统
+RAG（Retrieval-Augmented Generation）是一种自然语言处理（NLP）模型架构，它结合了检索和生成方法的元素。通过将信息检索技术与文本生成功能相结合来增强大语言模型的性能。评估RAG检索相关信息、结合上下文、确保流畅性、避免偏见对提高满足用户满意度至关重要。有助于识别系统问题，指导改进检索和生成模块。
+度量
+描述
+Faithfulness
+事实一致性：根据给定的上下文测量生成的答案与事实的一致性。
+Answer relevance
+答案相关性：重点评估生成的答案与给定提示的相关性。
+Context precision
+上下文精确度：评估上下文中存在的所有与实况相关的项目是否排名更高
+Context relevancy
+语境关联：测量检索到的上下文的相关性，根据问题和上下文计算。
+Context Recall
+上下文召回率：测量检索到的上下文与样本答案（被视为基本事实）的一致程度。
+Answer semantic similarity
+答案语义相似度：评估生成的答案和基础事实之间的语义相似性。
+Answer correctness
+答案正确性：衡量生成的答案与地面实况相比的准确性。
+如RAGAS：
+    •定位：专注 RAG 系统评估，提供自动化、无参考标签的评估框架，评估指标覆盖全面；
+    •覆盖指标：上下文相关性、上下文召回率、答案忠实度、答案相关性、答案正确性等；
+    •支持开发语言：Python。
+Trulens
+    •定位：提供 RAG Triad 评估模型（检索质量、生成准确性、对齐度），但指标较 RAGAS 粗略，属于 RAGAS 的子集；
+    •覆盖指标：上下文相关性、答案忠实度、答案相关性等；
+    •支持开发语言：Python。
+LangSmith：
+    •定位：LangChain 生态的核心监控与调试工具，覆盖 LLM 应用全生命周期，也可与 RAGAS 联合评估 RAG 系统；
+    •覆盖指标：上下文相关性、答案忠实度、答案相关性、答案正确性等；
+    •支持开发语言：Python、TypeScript
+LlamaIndex：
+    •定位：一个专注于构建 RAG 应用的框架，提供数据索引、检索与生成的完整流程支持。支持部分指标评估，也可与 RAGAS 联合评估 RAG 系统；
+    •覆盖指标：答案忠实度、答案相关性、答案正确性等；
+    •支持开发语言：Python、TypeScript。
+ [1]RAGAS:https://docs.ragas.io/en/latest/getstarted/rag_eval/
+ [2]Trulens:https://www.trulens.org/getting_started/
+ [3]LangSmith:https://docs.smith.langchain.com/evaluation/tutorials/rag
+ [4]LlamaIndex:https://www.llamaindex.ai/
+通用评估基准
+通用大模型具有多功能性，如：聊天、实体识别（NER）、内容生成、文本摘要、情感分析、翻译、SQL生成、数据分析等。下面收集了一些对这些大模型的评估基准。
+基准
+描述
+参考资料
+GLUE基准
+GLUE（General   Language Understanding Evaluation）提供了一组标准化的各种NLP任务，以评估不同大语言模型的有效性。
+https://gluebenchmark.com/
+SuperGLUE基准
+提供比起GLUE更具挑战性、多样化，更全面的任务。
+
+   https://super.gluebenchmark.com/
+
+HellaSwag
+评估LLM完成句子的能力。
+https://rowanzellers.com/hellaswag/
+https://github.com/rowanz/hellaswag/tree/master/hellaswag_models#submitting-to-the-leaderboard
+
+TruthfulQA
+评测模型的回答是否真实性。
+https://github.com/sylinrl/TruthfulQA
+https://arxiv.org/abs/2109.07958
+
+MMLU
+评估LLM可以处理大规模多任务的能力。
+https://github.com/hendrycks/test
+基于模型的评测
+EvalScope  https://github.com/modelscope/evalscope
+EvalScope是阿里巴巴的魔搭社区官方推出的模型评测与性能基准测试框架，内置多个常用测试基准和评测指标，如MMLU、CMMLU、C-Eval、GSM8K、ARC、HellaSwag、TruthfulQA、MATH和HumanEval等；支持多种类型的模型评测，包括LLM、多模态LLM、embedding模型和reranker模型。
+常见评估类型：
+- 通用语言理解
+- 知识推理
+- 事实一致性
+- 摘要质量
+- 对话理解
+- 多语言能力
+EvalScope还适用于多种评测场景，如端到端RAG评测、竞技场模式和模型推理性能压测等。
+此外，通过ms-swift训练框架的无缝集成，可一键发起评测，实现了模型训练到评测的全链路支持。
+
+OpenAI Evals    https://github.com/openai/eval
+ OpenAI Evals是OpenAI开源的大语言模型（LLM）评估框架，旨在为LLM及LLM系统提供标准化的评估工具与基准测试集合。
+
+一、核心功能
+LLM评估框架
+提供一套完整的工具链，用于测试LLM的各项能力（如推理、生成、多轮对话等）。
+支持自定义评估逻辑，用户可基于自身业务场景创建私有评估（Private Evals），使用自有数据而无需公开。
+开源基准测试注册表
+内置多种预定义评估案例（如CoQA问答、数学推理等），覆盖模型的不同维度（准确性、鲁棒性、安全性等）。
+示例评估存储于evals/registry目录，包含YAML配置文件和测试数据。
+灵活的扩展能力
+支持通过Python代码或YAML文件定义评估逻辑，即使非开发者也可通过模板快速构建评估（如模型评分型评估）。
+集成权重与偏差（Weights & Biases）、Snowflake等工具，支持评估结果的日志记录与分析。
+基于人的主观性评测
+Human Evaluation
+定义：a way to evaluate the quality and accuracy of model-generated results through human participation.
+参与者：请评估员（如专家、研究人员或普通用户）
+优势：在一些非标准的情况下，自动评估不太适用。与自动评估相比，手动评估更接近实际应用场景，并可以提供更全面和准确的反馈。
+适用场景：例如，在开放生成任务中，嵌入式相似度指标（如BERTScore）是不足够的，人工评估更为可靠。尽管一些生成任务可以采用某些自动评估协议，但在这些任务中，人工评估更为受欢迎，因为生成的结果总是可以比标准答案更好。
+局限性：即使是人工评估也可能存在高度的变异性和不稳定性，这可能是由于文化和个体差异所导致的。在实际应用中，这两种评估方法会根据实际情况进行考虑和权衡。
+
+[图片]
+
+大模型评测综述，原文地址：https://arxiv.org/pdf/2307.0310
+参考文章「大模型项目」一文了解如何评测大模型效果？10000字+ - 知乎
+
+编辑器代码，合并RAG流程
+将之前构建的rag流程代码合并进编码器代码中
+代码演示
+将整个rag流程编写为一个接口调用
+[图片]
+结果展示
+启动端口
+[图片]
+通过代码远程调用端口中rag部分完成问答任务
+[图片]
+回答结果
+[图片]
+使用fastapi-mcp对rag流程合部件进行mcp封装
+embedding模型api部署
+Qwen embedding合reranker模型测试
+rag显示结果优化：rag最终结果显示使用哪些切片生成
+大模型评价指标调研
+调研大模型调用MCP
+测试指标系统相关工作
+评测前端：
+测试界面添加通过接口调用不同任务功能，测试不同大模型结果(deepseekv1)，测试结果对比
+
+
+rag：
+大模型在rag流程不能生成答案时添加联网搜索功能
+动态控制rag是否使用联网流程
+rag流程使用封装后的mcp形式
+加一个问题改写并向量化功能
+检索指定库，embedding合reranker内置，检索重拍合在一起
+检索和重排进行mcp封装
+大模型mcp工具调用适配qwen模型
+提示词模板优化
+embedding mcp工具改为调用api形式
+RAG同时检索两个库+网络检索
+文件传入代码embedding模型格式更改
+数据库选择功能
+
+封装：
+docker调研
+docker封装
+
+
+

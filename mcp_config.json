@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "rag-server": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["-u", "rag_server.py"],
+      "env": {
+         "PYTHONUNBUFFERED": "1"
+      }
+    }
+  }
+}
